@@ -1,15 +1,29 @@
 set :application, "ProjetoEstudoRails"
+
 set :scm, :git
+set :scm_username, "handersonbf@gmail.com"
 set :repository,  "git@github.com:handersonbf/ProjetoEstudoRails.git"
 set :branch, "master"
-set :deploy_via, :remote_cache
+set :git_enable_submodules, 1
+
+
+set :deploy_to, "/home/deployer/apps/"
+#set :deploy_via, :remote_cache
+set :user, "root"
+set :runner,"root"
+set :password,"senha"
+set :use_sudo, false
+
+ssh_options[:paranoid]    = false
+default_run_options[:pty] = true
+
 
 # Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
 
-role :web, "your web-server here"                          # Your HTTP server, Apache/etc
-role :app, "your app-server here"                          # This may be the same as your `Web` server
-role :db,  "your primary db-server here", :primary => true # This is where Rails migrations will run
-role :db,  "your slave db-server here"
+role :web, "###.###.##.##"                          # Your HTTP server, Apache/etc
+role :app, "###.###.##.##"                          # This may be the same as your `Web` server
+role :db,  "###.###.##.##", :primary => true # This is where Rails migrations will run
+#role :db,  "127.0.0.1"
 
 
 namespace :deploy do
@@ -17,6 +31,12 @@ namespace :deploy do
   task :restart, :roles => :app, :except => { :no_release => true } do
     run "touch #{current_path}/tmp/restart.txt"
   end
+
+  [:start, :stop].each do |t|
+    desc "#{t} task is a no­op with mod_rails"
+    task t, :roles => :app do ; end
+  end
+end
 
 # if you're still using the script/reaper helper you will need
 # these http://github.com/rails/irs_process_scripts
